@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "src/apis", "node_modules/models"],
+  "include": ["src", "src/apis", "node_modules/models", "modeles"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

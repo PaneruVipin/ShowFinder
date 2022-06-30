@@ -1,7 +1,7 @@
 import { normalize, schema } from "normalizr"
 import { applyMiddleware, createStore, Reducer } from "redux"
-import { SHOWS_FETCH, SHOWS_FETCHED } from "./Actions/shows"
-import { show } from "./modeles/show"
+import { SHOWS_FETCH, SHOWS_FETCHED, SHOW_FETCHED } from "./Actions/shows"
+import { show } from "../modeles/show"
 import { rootSaga, sagaMiddleware } from "./sagas"
 
 export type State={
@@ -17,11 +17,10 @@ export type State={
 const initialState:State={
    shows:{},
    query:'',
-   showsAgainstQuery:{}
+   showsAgainstQuery:{},
 }
 
 const reducer:Reducer<State> = (state=initialState,action) =>{
-   console.log(action.payload)
   switch (action.type) {
    case SHOWS_FETCHED:
       const {shows,query}:{shows:show[], query:string} =action.payload
@@ -32,6 +31,12 @@ const reducer:Reducer<State> = (state=initialState,action) =>{
       return {...state, shows:{...state.shows, ...NormlizedShows}, showsAgainstQuery:{...state.showsAgainstQuery,[query]:ids}}
       case SHOWS_FETCH:
          return {...state,query:action.payload}
+         case SHOW_FETCHED:
+            const {show, showId}= action.payload
+            return {...state,shows:{
+               ...state.shows, [showId]:show
+            } 
+         }
    default:
       return state
   }
