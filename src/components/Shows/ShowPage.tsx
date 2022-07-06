@@ -37,7 +37,7 @@ type ShowPageProps = {
     
       <div className='bg-green-300 min-h-screen'>
       <ShowPageHeader onChange={handleChange} value={query}/>
-      {showsLoading?<Loader/>:<div className="pt-10 px-6">
+      {showsLoading?<Loader/>:<div className="md:pt-10 pt-6 md:px-6 px-4">
       {shows && <ShowList query={query} shows={shows}/>}
       </div>}
     </div>

@@ -13,7 +13,7 @@ type ActorListProps = {
 const ActorList: FC<ActorListProps> = ({actors}) => {
    
   return (
-    <div className="flex flex-wrap gap-x-10 gap-y-20 justify-between">
+    <div className="flex flex-wrap md:gap-x-10 gap-x-1 gap-y-4 md:gap-y-20 justify-between">
         {
      actors &&   actors.map(a=><Actor key={a.person.id} actor={a}/>)
         }

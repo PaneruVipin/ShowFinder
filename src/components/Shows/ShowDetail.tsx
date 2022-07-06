@@ -59,12 +59,12 @@ const ShowDetail: FC<ShowDetailProps> = ({getShowCast,showCast,params,getShow,sh
           } 
          }}
   return (
-   <div className="bg-indigo-100 min-h-screen px-20 pt-6 ">
+   <div className="bg-indigo-100 min-h-screen md:px-20 px-10 pt-6 ">
     {shows?.length>2 &&
-   <div className="flex px-4 fixed p-2 justify-between inset-x-0 top-72">
+   <div className="flex md:px-4 fixed px-0 justify-between inset-x-0 inset-y-1/2">
    {prev &&
    <LinkWithQuery to={'/show/'+prev}>
-    <div className="rounded-full bg-yellow-500 p-6">
+    <div className="rounded-full bg-yellow-500 md:p-6 p-3">
     <FcPrevious/>
     </div>
     </LinkWithQuery>
@@ -72,7 +72,7 @@ const ShowDetail: FC<ShowDetailProps> = ({getShowCast,showCast,params,getShow,sh
    <span className="w-full"></span>
    {next &&
    <LinkWithQuery to={'/show/'+next}>
-    <div className="rounded-full bg-yellow-500 p-6">
+    <div className="rounded-full bg-yellow-500 md:p-6 p-3">
     <FcNext/>
     </div>
     </LinkWithQuery>
@@ -82,7 +82,7 @@ const ShowDetail: FC<ShowDetailProps> = ({getShowCast,showCast,params,getShow,sh
     {
     show &&
     <div>
-      <div className="flex gap-x-10">
+      <div className="flex md:flex-row flex-col md:gap-x-10">
     <img src={show.image?.medium}/>
     <div className="space-y-2">
     <span className="text-2xl text-yellow-600">{show.name}</span>
