@@ -1,12 +1,12 @@
 
 import { AnyAction } from 'redux'
 import { call, delay, put} from 'redux-saga/effects'
-import { showFetchedAction, showsFetchedAction } from '../Actions/shows'
-import { getShow, getShows } from '../apis/show'
-import { show } from '../../modeles/show'
+import { showCastFetchedAction, showFetchedAction, showsFetchedAction } from '../Actions/shows'
+import { getShow, getShowCast, getShows } from '../apis/show'
+import { show, showCast } from '../../modeles/show'
 
 export function* getShowsSaga(action:AnyAction):Generator{
-  yield delay(500)
+  yield delay(300)
  if(!action.payload){
   return
  }
@@ -15,10 +15,11 @@ export function* getShowsSaga(action:AnyAction):Generator{
 }
 
 export function* getShowSaga(action:AnyAction):Generator{
- if(!action.payload){
-  return
- }
   const data=  yield call(getShow, action.payload)
-  //console.log('data',data)
   yield put(showFetchedAction((data as show),action.payload))
 }
+
+export function* getShowCastSaga(action:AnyAction):Generator{
+   const data=  yield call(getShowCast, action.payload)
+   yield put(showCastFetchedAction((data as showCast[]),action.payload))
+ }

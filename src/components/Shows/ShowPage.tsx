@@ -2,18 +2,21 @@ import React, { FC,memo, useEffect } from "react";
 import { connect } from "react-redux";
 import { showsFetchAction } from "../../Actions/shows";
 import { show } from "../../../modeles/show";
-import { queryStateselector, showsSelector } from "../../selectors/show";
+import { queryStateselector, showsLoadingSelector, showsSelector } from "../../selectors/show";
 import { State } from "../../store";
 import ShowList from "./ShowList";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import ShowPageHeader from "./ShowPageHeader";
+import Loader from "../../Loader";
 
 type ShowPageProps = {
   query:string
   getShows:(query:string)=>void,
-  shows:show[]
+  shows:show[],
+  showsLoading:boolean
 };
 
-  const ShowPage: FC<ShowPageProps> = ({getShows,shows,query}) => {
+  const ShowPage: FC<ShowPageProps> = ({getShows,shows,query,showsLoading}) => {
   const navigate=useNavigate()
   const [searchParams] = useSearchParams();
   const searchQuery=searchParams.get('q')
@@ -31,9 +34,12 @@ type ShowPageProps = {
   })
   
   return(
-    <div>
-      <input  value={query} placeholder="hello bai log klya hall call"  onChange={handleChange}></input>
+    
+      <div className='bg-green-300 min-h-screen'>
+      <ShowPageHeader onChange={handleChange} value={query}/>
+      {showsLoading?<Loader/>:<div className="pt-10 px-6">
       {shows && <ShowList query={query} shows={shows}/>}
+      </div>}
     </div>
   )
 };
@@ -44,7 +50,8 @@ const mapDispatchToProps={
 }
 const mapStateToProps=(s:State)=>({
   shows:showsSelector(s),
-  query:queryStateselector(s)
+  query:queryStateselector(s),
+  showsLoading:showsLoadingSelector(s)
 })
 
 export default connect(mapStateToProps,mapDispatchToProps)(memo(ShowPage));

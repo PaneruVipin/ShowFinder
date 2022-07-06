@@ -9,7 +9,7 @@ type ShowListProps = {
 
 const ShowList: FC<ShowListProps> = ({shows,query}) => {
   return (
-    <div>
+    <div className="flex flex-wrap gap-x-1  gap-y-12 justify-between">
       { shows.map((s)=><Show key={s.id} query={query} show={s}></Show>)}
     </div>
   )

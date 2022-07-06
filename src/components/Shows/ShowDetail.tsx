@@ -1,35 +1,52 @@
+import MDEditor from "@uiw/react-md-editor";
 import { FC, memo, useEffect } from "react";
 import { connect } from "react-redux";
-import { useHref, useLocation, useSearchParams } from "react-router-dom";
-import { show } from "../../../modeles/show";
-import { showFetchAction, showsFetchAction } from "../../Actions/shows";
+import {  useSearchParams } from "react-router-dom";
+import { show, showCast } from "../../../modeles/show";
+import {  showCastFetchAction, showFetchAction, showsFetchAction } from "../../Actions/shows";
 import LinkWithQuery from "../../LinkWithQuery";
-import { showSelector, showsSelector } from "../../selectors/show";
+import { FcPrevious,FcNext } from 'react-icons/fc';
+import Loader from "../../Loader";
+import { castLoadingSelector, showCastSelector,showLoadingSelector, showSelector, showsSelector } from "../../selectors/show";
 import { State } from "../../store";
 import { withRouter, WithRouterProps } from "../../WithRouter";
+import ActorList from "./ActorList";
 
 type ShowDetailProps = {
     getShows:(query:string)=>void,
     getShow:(showId:number)=>void,
     show:show,
-    shows:show[]
+    shows:show[],
+    showLoading:boolean,
+    castLoading:boolean,
+    showCast:showCast[],
+    getShowCast:(showId:number)=>void
 } & WithRouterProps
 
-const ShowDetail: FC<ShowDetailProps> = ({params,getShow,shows, show,getShows}) => {
+const ShowDetail: FC<ShowDetailProps> = ({getShowCast,showCast,params,getShow,shows, show,getShows,showLoading,castLoading}) => {
+
   const [searchParams] = useSearchParams();
     const urlQuery=searchParams.get('q')
-    const {search} =useLocation()
-    console.log(search)
    useEffect(()=>{
-    if(!show && !urlQuery) {
-      getShow(+params.showId)
-    }else if(urlQuery && !show){
+     if(urlQuery && !show){  
       getShows(urlQuery)
     }
-   
+    
    }, [])
+
+   useEffect(()=>{
+    if(urlQuery && shows){
+      for (let i = 0; i < shows.length; i++) {
+        const showId = shows[i].id;
+      }
+    }
+   },[])
+   useEffect(()=>{
+    getShowCast(+params.showId)
+    getShow(+params.showId)
+   },[+params.showId])
       let next, prev;
-     if(shows){
+ if(shows && show){
          for (let i = 0; i < shows.length; i++) {
           const show=shows[i]
           if(show.id===+params.showId && i<(shows.length-1)){
@@ -39,23 +56,44 @@ const ShowDetail: FC<ShowDetailProps> = ({params,getShow,shows, show,getShows}) 
           if(i>=1 && show.id===+params.showId){
             const perviousShow=shows[i-1]
             prev=perviousShow.id
-          }
+          } 
          }}
   return (
-   <div>{
+   <div className="bg-indigo-100 min-h-screen px-20 pt-6 ">
+    {shows?.length>2 &&
+   <div className="flex px-4 fixed p-2 justify-between inset-x-0 top-72">
+   {prev &&
+   <LinkWithQuery to={'/show/'+prev}>
+    <div className="rounded-full bg-yellow-500 p-6">
+    <FcPrevious/>
+    </div>
+    </LinkWithQuery>
+   }
+   <span className="w-full"></span>
+   {next &&
+   <LinkWithQuery to={'/show/'+next}>
+    <div className="rounded-full bg-yellow-500 p-6">
+    <FcNext/>
+    </div>
+    </LinkWithQuery>
+   }
+   </div>}
+    {showLoading && <Loader/>}
+    {
     show &&
     <div>
-    <h2>{show.name}</h2>
+      <div className="flex gap-x-10">
     <img src={show.image?.medium}/>
-    <p>{show.summary}</p>
-   'download the movie this link' <a className="text-blue-500" href={show.url} target='blank'>{show.url}</a>
-   <div className="flex bg-red-500 p-2 justify-between">
-   {prev &&<LinkWithQuery to={'/show/'+prev}>prev</LinkWithQuery>}
-   <span className="w-full"></span>
-   {next &&<LinkWithQuery to={'/show/'+next}>next</LinkWithQuery>}
+    <div className="space-y-2">
+    <span className="text-2xl text-yellow-600">{show.name}</span>
+    <MDEditor.Markdown className="bg-indigo-100" source={show.summary} />
+    </div>
+    </div>
+     <div className="rounded-md p-2">
+     <div className="font-bold mt-4">{'Cast >'}</div>
+    {castLoading?<Loader></Loader>:<ActorList actors={showCast}/>}
    </div>
    </div>
-    
     }
    </div>
   )
@@ -64,14 +102,18 @@ const ShowDetail: FC<ShowDetailProps> = ({params,getShow,shows, show,getShows}) 
 ShowDetail.defaultProps = {};
 const mapDispatchToProps={
     getShow:showFetchAction,
-    getShows:showsFetchAction
+    getShows:showsFetchAction,
+    getShowCast:showCastFetchAction
 }
 
 const mapStateToProps=(s:State, props:any)=>{
   const showId=+props.params.showId
   return {
     show:showSelector(showId)(s),
-    shows:showsSelector(s)
+    shows:showsSelector(s),
+    showLoading:showLoadingSelector(showId)(s),
+    castLoading:castLoadingSelector(showId)(s),
+    showCast:showCastSelector(showId)(s)
   }
 }
 export default (withRouter(connect(mapStateToProps,mapDispatchToProps)(memo(ShowDetail))));

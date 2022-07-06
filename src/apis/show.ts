@@ -1,5 +1,5 @@
 import axios from "axios"
-import { show } from "../../modeles/show"
+import { show, showCast } from "../../modeles/show"
 type getShows={
     show: show
 }
@@ -14,3 +14,11 @@ export const getShow= async(showId:number) =>{
     return response.data
     }
 
+
+    export const getShowCast= async(showId:number) =>{
+        const response=await axios.get<showCast[]>(` https://api.tvmaze.com/shows/${showId}/cast`);
+        return response.data.map(d=>({
+            person:d.person,
+            character:d.character
+        }))
+        }
