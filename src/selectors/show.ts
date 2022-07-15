@@ -2,16 +2,16 @@
 import { State } from "../store";
 import {createSelector} from 'reselect'
 
-export const stateSelector=(s:State)=>s
-export const showStateselector=createSelector(stateSelector,
+ const stateSelector=(s:State)=>s
+ const showStateselector=createSelector(stateSelector,
      (state)=>state.shows)
-export const entitiesStateSelector=createSelector(showStateselector,
+ const entitiesStateSelector=createSelector(showStateselector,
      (allShows)=>allShows.entities)
-export const showAgainstQueryStateselector=createSelector(showStateselector,
+ const showAgainstQueryStateselector=createSelector(showStateselector,
      (allShows)=>allShows.showsAgainstQuery)
-export const queryStateselector=createSelector(showStateselector, 
+ export const queryStateselector=createSelector(showStateselector, 
     (allShows)=>allShows.query)
-export const castStateSelector=createSelector(
+ const castStateSelector=createSelector(
     showStateselector,
     (showsState)=>showsState.showsCast
 )
@@ -51,7 +51,8 @@ export const showLoadingSelector=(showId:number)=>createSelector(
 
 export const showsLoadingSelector=createSelector(
     showStateselector,
-    (showsState)=>showsState.showsLoading
+    queryStateselector,
+    (showsState,query)=>showsState.showsLoading[query]
 )
 
 export const castLoadingSelector=(showId:number)=>createSelector(

@@ -20,7 +20,9 @@ import { SHOWS_FETCH, SHOWS_FETCHED, SHOW_CAST_FETCH, SHOW_CAST_FETCHED, SHOW_FE
     showLoading:{
       [id:number]:boolean
     },
-    showsLoading:boolean,
+    showsLoading:{
+      [query:string]:boolean
+    },
     castLoading:{
       [id:number]:boolean
     }
@@ -33,7 +35,7 @@ const initialState:ShowState={
    showsCast:{},
    castAgainstShowId:{},
    showLoading:{},
-   showsLoading:false,
+   showsLoading:{},
    castLoading:{}
 }
 
@@ -46,9 +48,11 @@ export const showReducer:Reducer<ShowState> = (state=initialState,action) =>{
       const Normlized= normalize(shows, [showEntity])
       const NormlizedShows=Normlized.entities.shows
       const ids=shows.map(s=>s.id)
-      return {...state,showsLoading:false, entities:{...state.entities, ...NormlizedShows}, showsAgainstQuery:{...state.showsAgainstQuery,[query]:ids}}
+      return {...state,showsLoading:{[query]:false}, entities:{...state.entities, ...NormlizedShows}, showsAgainstQuery:{...state.showsAgainstQuery,[query]:ids}}
       case SHOWS_FETCH:
-         return {...state,query:action.payload, showsLoading:true}
+         return {...state,query:action.payload, showsLoading:{
+            [action.payload]:true
+         }}
          case SHOW_FETCHED:
             const {show, showId}= action.payload
             return {...state,entities:{
