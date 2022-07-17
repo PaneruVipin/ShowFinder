@@ -92,6 +92,7 @@ const ShowDetail: FC<ShowDetailProps> = ({getShowCast,showCast,params,getShow,sh
      <div className="rounded-md p-2">
      <div className="font-bold mt-4">{'Cast >'}</div>
     {castLoading?<Loader></Loader>:<ActorList actors={showCast}/>}
+    {!showCast?.length && !castLoading && <div>cast information is not availavle</div>}
    </div>
    </div>
     }

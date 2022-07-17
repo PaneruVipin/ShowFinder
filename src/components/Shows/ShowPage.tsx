@@ -42,7 +42,7 @@ type ShowPageProps = {
       {showsLoading?<Loader/>:<div className="md:pt-10 pt-6 md:px-6 px-4">
       {shows  && <ShowList query={query} shows={shows}/>
       }
-      {shows?.length===0 && !showsLoading && <div className="flex flex-col gap-y-3 pl-20">
+      {shows?.length===0 && !showsLoading && <div className="flex flex-col gap-y-3 md:pl-20 ">
     <span>{`Your search - ${query} - did not match any movies/shows.`}</span>
     <span>Suggestions:</span>
     <div>
